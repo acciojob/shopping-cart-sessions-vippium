@@ -6,51 +6,59 @@ const products = [
     { id: 5, name: "Product 5", price: 50 },
 ];
 
-function renderProducts() {
-    const productList = document.getElementById('product-list');
-    productList.innerHTML = '';
+document.addEventListener("DOMContentLoaded", () => {
+    renderProducts();
+    loadCart();
+    
+    document.getElementById("clear-cart-btn").addEventListener("click", clearCart);
+});
 
+function renderProducts() {
+    const productList = document.getElementById("product-list");
     products.forEach(product => {
-        const li = document.createElement('li');
-        li.textContent = `${product.name} - $${product.price}`;
-        const addButton = document.createElement('button');
-        addButton.textContent = 'Add to Cart';
-        addButton.onclick = () => addToCart(product);
-        li.appendChild(addButton);
+        const li = document.createElement("li");
+        li.innerHTML = `${product.name} - $${product.price} <button onclick="addToCart(${product.id})">Add to Cart</button>`;
         productList.appendChild(li);
     });
 }
 
+function addToCart(productId) {
+    const cart = getCart();
+    const product = products.find(p => p.id === productId);
+    
+    if (product) {
+        cart.push(product);
+        saveCart(cart);
+        renderCart();
+    }
+}
+
 function renderCart() {
-    const cartList = document.getElementById('cart-list');
-    cartList.innerHTML = '';
+    const cartList = document.getElementById("cart-list");
+    cartList.innerHTML = ""; // Clear the current cart display
     const cart = getCart();
 
     cart.forEach(item => {
-        const li = document.createElement('li');
-        li.textContent = `${item.name} - $${item.price}`;
+        const li = document.createElement("li");
+        li.innerHTML = `${item.name} - $${item.price}`;
         cartList.appendChild(li);
     });
 }
 
-function addToCart(product) {
-    const cart = getCart();
-    cart.push(product);
-    sessionStorage.setItem('cart', JSON.stringify(cart));
-    renderCart();
+function clearCart() {
+    sessionStorage.removeItem("shoppingCart");
+    renderCart(); // Update the cart display
+}
+
+function saveCart(cart) {
+    sessionStorage.setItem("shoppingCart", JSON.stringify(cart));
 }
 
 function getCart() {
-    const cart = sessionStorage.getItem('cart');
+    const cart = sessionStorage.getItem("shoppingCart");
     return cart ? JSON.parse(cart) : [];
 }
 
-function clearCart() {
-    sessionStorage.removeItem('cart');
-    renderCart();
+function loadCart() {
+    renderCart(); // Render the cart on page load
 }
-
-document.getElementById('clear-cart-btn').addEventListener('click', clearCart);
-
-renderProducts();
-renderCart();
