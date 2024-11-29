@@ -6,10 +6,9 @@ const products = [
     { id: 5, name: "Product 5", price: 50 },
 ];
 
-// Function to render the product list
 function renderProducts() {
     const productList = document.getElementById('product-list');
-    productList.innerHTML = ''; // Clear existing products
+    productList.innerHTML = '';
 
     products.forEach(product => {
         const li = document.createElement('li');
@@ -22,10 +21,9 @@ function renderProducts() {
     });
 }
 
-// Function to render the shopping cart
 function renderCart() {
     const cartList = document.getElementById('cart-list');
-    cartList.innerHTML = ''; // Clear existing cart items
+    cartList.innerHTML = '';
     const cart = getCart();
 
     cart.forEach(item => {
@@ -35,7 +33,6 @@ function renderCart() {
     });
 }
 
-// Function to add a product to the cart
 function addToCart(product) {
     const cart = getCart();
     cart.push(product);
@@ -43,21 +40,17 @@ function addToCart(product) {
     renderCart();
 }
 
-// Function to retrieve the cart from session storage
 function getCart() {
     const cart = sessionStorage.getItem('cart');
     return cart ? JSON.parse(cart) : [];
 }
 
-// Function to clear the cart
 function clearCart() {
     sessionStorage.removeItem('cart');
     renderCart();
 }
 
-// Event listener for the clear cart button
 document.getElementById('clear-cart-btn').addEventListener('click', clearCart);
 
-// Initial rendering of products and cart
 renderProducts();
 renderCart();
